@@ -1,0 +1,19 @@
+[app]
+env = "dev"
+base_url = "http://localhost:8080"
+
+[http]
+addr = ":8080"
+read_timeout = "5s"
+write_timeout = "10s"
+idle_timeout = "60s"
+shutdown_timeout = "10s"
+
+[db]
+dsn = "postgres://egorkoltyshev@localhost:5432/linkshort?sslmode=disable"
+max_open_conns = 10
+max_idle_conns = 5
+conn_max_lifetime = "30m"
+ping_timeout = "2s"
+
+[comment]

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CommentTree</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; padding: 16px; max-width: 980px; }
+    h1 { margin: 0 0 12px; font-size: 20px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+    input, textarea, select, button { font: inherit; }
+    input, select { padding: 8px; }
+    textarea { width: 100%; min-height: 76px; padding: 8px; }
+    button { padding: 8px 12px; cursor: pointer; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; }
+    .muted { color: #666; font-size: 12px; }
+    .tree { margin-top: 12px; }
+    .node { border-left: 2px solid #eee; margin: 10px 0; padding-left: 10px; }
+    .node-header { display:flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+    .node-text { white-space: pre-wrap; margin: 6px 0 8px; }
+    .actions { display:flex; gap: 8px; flex-wrap: wrap; }
+    .pill { display:inline-block; padding: 2px 8px; border: 1px solid #ddd; border-radius: 999px; font-size: 12px; }
+    .split { display:grid; gap: 12px; grid-template-columns: 1fr; }
+    @media (min-width: 900px){ .split { grid-template-columns: 1.1fr 0.9fr; } }
+    .list { margin: 0; padding-left: 18px; }
+  </style>
+</head>
+<body>
+  <!--
+  Концепция: интерфейс просмотра/создания/удаления комментариев + поиск
+  Название программы: CommentTree UI
+  Цель/назначение: визуализация дерева и работа с API
+  Аудитория: учебный проект
+  Входные данные: ввод author/text, выбор parent_id, поиск q
+  Выходные данные: дерево/результаты поиска
+  Ограничения: без фреймворков, минимализм
+  Инвариант: parent_id=0 для корня, иначе существующий id
+  -->
+  <h1>CommentTree — древовидные комментарии</h1>
+
+  <div class="split">
+    <div class="card">
+      <div class="row">
+        <input id="searchQ" type="text" placeholder="Поиск (текст/автор)" style="flex:1; min-width: 220px;">
+        <button id="searchBtn">Найти</button>
+        <button id="clearSearchBtn">Сброс</button>
+      </div>
+
+      <div class="row">
+        <label class="muted">Сортировка:</label>
+        <select id="sortMode">
+          <option value="created_at_asc">created_at_asc</option>
+          <option value="created_at_desc">created_at_desc</option>
+        </select>
+
+        <label class="muted">Страница:</label>
+        <input id="page" type="number" min="1" value="1" style="width: 90px;">
+        <label class="muted">Лимит:</label>
+        <input id="limit" type="number" min="1" value="10" style="width: 90px;">
+        <button id="reloadBtn">Обновить дерево</button>
+      </div>
+
+      <div id="meta" class="muted"></div>
+      <div id="tree" class="tree"></div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="pill">Создание</span>
+        <span class="muted">Parent ID: <b id="parentBadge">0</b></span>
+        <button id="resetParentBtn">Сделать корневым</button>
+      </div>
+
+      <div class="row">
+        <input id="author" type="text" placeholder="Автор (необязательно)" style="flex:1; min-width: 200px;">
+      </div>
+
+      <div class="row" style="width:100%;">
+        <textarea id="text" placeholder="Текст комментария"></textarea>
+      </div>
+
+      <div class="row">
+        <button id="createBtn">Создать</button>
+        <span id="status" class="muted"></span>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #eee; margin: 12px 0;">
+      <div class="muted">
+        Подсказка: у каждого комментария есть кнопка «Ответить», она подставляет Parent ID.
+      </div>
+
+      <div id="searchResults" style="margin-top: 12px;"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
